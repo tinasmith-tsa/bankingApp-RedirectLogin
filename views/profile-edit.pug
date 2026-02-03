@@ -37,7 +37,7 @@ block content
               input#firstName.form-control(
                 type="text"
                 name="firstName"
-                value=oktaProfile.firstName || user.name?.givenName || ''
+                value=(oktaProfile.firstName || (user.name && user.name.givenName) || user.displayName || '')
                 required
               )
 
@@ -46,7 +46,7 @@ block content
               input#lastName.form-control(
                 type="text"
                 name="lastName"
-                value=oktaProfile.lastName || user.name?.familyName || ''
+                value=(oktaProfile.lastName || (user.name && user.name.familyName) || '')
                 required
               )
 
@@ -54,7 +54,7 @@ block content
               label(for="email") Email
               input#email.form-control(
                 type="email"
-                value=user.email || user._json?.email || ''
+                value=(user.email || (user._json && user._json.email) || '')
                 disabled
               )
               small.text-muted Email cannot be changed here.
@@ -77,7 +77,7 @@ block content
               p #{user.displayName || 'N/A'}
             div.info-item
               label Email
-              p #{user.email || user._json?.email || 'N/A'}
+              p #{user.email || (user._json && user._json.email) || 'N/A'}
 
     //- App Preferences Section
     div.col-md-6
