@@ -1,21 +1,53 @@
 doctype html
 html
   head
-    title= "Okta Redirect Flow With Express"
+    title= "SecureBank - Online Banking"
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1, shrink-to-fit=no")
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
   body#samples
-    nav.navbar.navbar-default
+    nav.navbar.navbar-default.bank-nav
       div.container-fluid
+        div.navbar-header
+          a.navbar-brand(href="/")
+            span.bank-logo
+              span.logo-icon $
+              span.logo-text SecureBank
         ul.nav.navbar-nav
-          a(href="/")
-            img(src="https://www.okta.com/sites/default/files/Okta_Logo_BrightBlue_Medium.png", height="50", style="padding: 10px;")
+          if authenticated
+            li
+              a(href="/") Dashboard
+            li
+              a(href="/profile") My Accounts
         if authenticated
-          form.navbar-form.navbar-right(method="post", action="/logout")
-            button#logout-button.btn.btn-danger(type="submit") Logout
+          ul.nav.navbar-nav.navbar-right
+            li.welcome-text
+              span Welcome back!
+            li
+              form.navbar-form(method="post", action="/logout", style="margin: 0;")
+                button#logout-button.btn.btn-logout(type="submit") Sign Out
         else
           form.navbar-form.navbar-right(method="get", action="/login")
-            button#login-button.btn.btn-primary(type="submit") Login           
+            button#login-button.btn.btn-login(type="submit") Sign In
     div#content.container
       block content
+    footer.bank-footer
+      div.container
+        div.row
+          div.col-md-4
+            h4 SecureBank
+            p Your trusted partner in banking since 2024
+          div.col-md-4
+            h4 Quick Links
+            ul
+              li Member FDIC
+              li Equal Housing Lender
+              li Privacy Policy
+          div.col-md-4
+            h4 Contact Us
+            p 1-800-SECURE-1
+            p support@securebank.com
+        div.row
+          div.col-md-12.text-center
+            p.copyright © 2024 SecureBank. All rights reserved.

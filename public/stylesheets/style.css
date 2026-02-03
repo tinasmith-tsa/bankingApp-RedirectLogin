@@ -1,8 +1,608 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+/* SecureBank - Banking Application Styles */
+
+:root {
+  --primary-color: #1a3a5c;
+  --secondary-color: #2e7d32;
+  --accent-color: #0d47a1;
+  --light-bg: #f5f7fa;
+  --card-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  --text-dark: #333;
+  --text-muted: #666;
 }
 
+body {
+  padding: 0;
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--light-bg);
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+/* Navigation */
+.bank-nav {
+  background: linear-gradient(135deg, var(--primary-color) 0%, #0d2137 100%);
+  border: none;
+  margin-bottom: 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.bank-nav .navbar-brand {
+  color: white !important;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.bank-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-icon {
+  background: var(--secondary-color);
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.logo-text {
+  color: white;
+}
+
+.bank-nav .nav > li > a {
+  color: rgba(255,255,255,0.9) !important;
+  font-weight: 500;
+}
+
+.bank-nav .nav > li > a:hover {
+  color: white !important;
+  background: rgba(255,255,255,0.1) !important;
+}
+
+.welcome-text {
+  color: rgba(255,255,255,0.8);
+  padding: 15px;
+}
+
+.btn-login {
+  background: var(--secondary-color);
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  font-weight: 600;
+}
+
+.btn-login:hover {
+  background: #1b5e20;
+  color: white;
+}
+
+.btn-logout {
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255,255,255,0.5);
+  padding: 8px 20px;
+}
+
+.btn-logout:hover {
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+/* Main Content */
+#content {
+  padding: 30px 15px;
+  min-height: calc(100vh - 250px);
+}
+
+/* Dashboard */
+.dashboard {
+  padding: 20px 0;
+}
+
+.welcome-header {
+  color: var(--primary-color);
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+/* Account Cards */
+.account-card {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: var(--card-shadow);
+  margin-bottom: 20px;
+  border-left: 4px solid var(--secondary-color);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.account-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+.account-card.checking {
+  border-left-color: #1976d2;
+}
+
+.account-card.savings {
+  border-left-color: var(--secondary-color);
+}
+
+.account-card.credit {
+  border-left-color: #f57c00;
+}
+
+.account-icon {
+  width: 50px;
+  height: 50px;
+  background: var(--light-bg);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: var(--primary-color);
+  margin-bottom: 15px;
+}
+
+.account-card h3 {
+  color: var(--primary-color);
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.account-number {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.account-balance {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 15px;
+}
+
+.btn-bank {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.btn-bank:hover {
+  background: #0d2137;
+  color: white;
+}
+
+/* Quick Actions */
+.quick-actions {
+  margin-top: 30px;
+}
+
+.quick-actions h3 {
+  color: var(--primary-color);
+  margin-bottom: 20px;
+  width: 100%;
+  padding-left: 15px;
+}
+
+.action-card {
+  background: white;
+  border-radius: 10px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: var(--card-shadow);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-card:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.action-card:hover .action-icon {
+  background: rgba(255,255,255,0.2);
+  color: white;
+}
+
+.action-icon {
+  width: 50px;
+  height: 50px;
+  background: var(--light-bg);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+/* Recent Transactions */
+.recent-transactions {
+  margin-top: 40px;
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: var(--card-shadow);
+}
+
+.recent-transactions h3 {
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+
+.recent-transactions .table {
+  margin-bottom: 0;
+}
+
+.credit-amount {
+  color: var(--secondary-color);
+  font-weight: 600;
+}
+
+.debit-amount {
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+/* Landing Page */
+.landing-page {
+  margin-top: -30px;
+}
+
+.hero-section {
+  background: linear-gradient(135deg, var(--primary-color) 0%, #0d2137 100%);
+  color: white;
+  padding: 80px 30px;
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+.hero-section h1 {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.hero-section .lead {
+  font-size: 18px;
+  opacity: 0.9;
+  margin-bottom: 30px;
+}
+
+.hero-features {
+  margin-bottom: 30px;
+}
+
+.feature-item {
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.check-icon {
+  color: var(--secondary-color);
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.btn-hero {
+  background: var(--secondary-color);
+  color: white;
+  padding: 15px 40px;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 5px;
+}
+
+.btn-hero:hover {
+  background: #1b5e20;
+  color: white;
+}
+
+.hero-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mock-card {
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  border-radius: 15px;
+  padding: 30px;
+  width: 320px;
+  color: white;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+.card-label {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 30px;
+}
+
+.card-number {
+  font-size: 22px;
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+}
+
+.card-holder {
+  font-size: 12px;
+  letter-spacing: 2px;
+  opacity: 0.8;
+}
+
+/* Services Section */
+.services-section {
+  padding: 60px 0;
+}
+
+.services-section h2 {
+  text-align: center;
+  color: var(--primary-color);
+  margin-bottom: 40px;
+  font-weight: 600;
+}
+
+.service-card {
+  background: white;
+  border-radius: 12px;
+  padding: 35px;
+  text-align: center;
+  box-shadow: var(--card-shadow);
+  height: 100%;
+}
+
+.service-icon {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 28px;
+  color: white;
+  font-weight: bold;
+}
+
+.service-card h3 {
+  color: var(--primary-color);
+  margin-bottom: 15px;
+}
+
+.service-card p {
+  color: var(--text-muted);
+}
+
+/* Security Section */
+.security-section {
+  background: var(--primary-color);
+  color: white;
+  padding: 50px 30px;
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+.security-section h2 {
+  margin-bottom: 15px;
+}
+
+.security-section p {
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto 25px;
+}
+
+.security-badges {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.badge-item {
+  background: rgba(255,255,255,0.15);
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+/* Profile / Account Page */
+.page-header {
+  color: var(--primary-color);
+  margin-bottom: 30px;
+  font-weight: 600;
+}
+
+.account-detail-card {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: var(--card-shadow);
+  margin-bottom: 20px;
+}
+
+.account-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.account-header h3 {
+  margin: 0;
+  color: var(--primary-color);
+}
+
+.account-status {
+  background: var(--secondary-color);
+  color: white;
+  padding: 5px 15px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.account-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.info-item label {
+  color: var(--text-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.info-item p {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.account-detail-card h4 {
+  color: var(--primary-color);
+  margin-bottom: 15px;
+}
+
+/* Sidebar */
+.sidebar-card {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: var(--card-shadow);
+  margin-bottom: 20px;
+}
+
+.sidebar-card h4 {
+  color: var(--primary-color);
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.summary-item .amount {
+  font-weight: 600;
+}
+
+.summary-item .amount.negative {
+  color: #d32f2f;
+}
+
+.summary-item.total {
+  font-weight: 700;
+  font-size: 16px;
+  margin-top: 15px;
+}
+
+.sidebar-card .btn-block {
+  margin-bottom: 10px;
+}
+
+/* Footer */
+.bank-footer {
+  background: #1a2634;
+  color: rgba(255,255,255,0.8);
+  padding: 40px 0 20px;
+  margin-top: 40px;
+}
+
+.bank-footer h4 {
+  color: white;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.bank-footer ul {
+  list-style: none;
+  padding: 0;
+}
+
+.bank-footer li {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.bank-footer p {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.copyright {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* Tables */
+.table > thead > tr > th {
+  border-bottom: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* Links */
 a {
-  color: #00B7FF;
+  color: var(--accent-color);
+}
+
+a:hover {
+  color: var(--primary-color);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-section {
+    text-align: center;
+    padding: 50px 20px;
+  }
+
+  .hero-section h1 {
+    font-size: 32px;
+  }
+
+  .hero-image {
+    margin-top: 40px;
+  }
+
+  .account-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .security-badges {
+    flex-direction: column;
+    align-items: center;
+  }
 }

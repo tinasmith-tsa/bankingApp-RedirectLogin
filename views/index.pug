@@ -1,16 +1,143 @@
 extends layout
 
 block content
-  h2= "Okta Redirect Flow + Express"
   if authenticated
-    br
-    div
-      p Welcome back!
-      p You have successfully authenticated against your Okta org, and have been redirected back to this application.
-      p Visit the #[a(href="/profile") My Profile] page in this application to view the information retrieved with your OAuth Access Token.
+    div.dashboard
+      h2.welcome-header Welcome to Your Dashboard
+      div.row
+        div.col-md-4
+          div.account-card.checking
+            div.account-icon
+              span $
+            h3 Checking Account
+            p.account-number ****4582
+            p.account-balance $12,458.32
+            a.btn.btn-bank(href="/profile") View Details
+        div.col-md-4
+          div.account-card.savings
+            div.account-icon
+              span $
+            h3 Savings Account
+            p.account-number ****7891
+            p.account-balance $45,230.00
+            a.btn.btn-bank(href="/profile") View Details
+        div.col-md-4
+          div.account-card.credit
+            div.account-icon
+              span $
+            h3 Credit Card
+            p.account-number ****3456
+            p.account-balance -$1,245.67
+            a.btn.btn-bank(href="/profile") View Details
+
+      div.row.quick-actions
+        h3 Quick Actions
+        div.col-md-3
+          div.action-card
+            div.action-icon T
+            p Transfer Money
+        div.col-md-3
+          div.action-card
+            div.action-icon P
+            p Pay Bills
+        div.col-md-3
+          div.action-card
+            div.action-icon D
+            p Deposit Check
+        div.col-md-3
+          div.action-card
+            div.action-icon S
+            p Statements
+
+      div.row.recent-transactions
+        h3 Recent Transactions
+        table.table.table-striped
+          thead
+            tr
+              th Date
+              th Description
+              th Amount
+              th Balance
+          tbody
+            tr
+              td Feb 1, 2024
+              td Direct Deposit - Payroll
+              td.credit-amount +$3,250.00
+              td $12,458.32
+            tr
+              td Jan 31, 2024
+              td Amazon.com
+              td.debit-amount -$89.99
+              td $9,208.32
+            tr
+              td Jan 30, 2024
+              td Grocery Store
+              td.debit-amount -$156.43
+              td $9,298.31
+            tr
+              td Jan 29, 2024
+              td Gas Station
+              td.debit-amount -$45.00
+              td $9,454.74
+            tr
+              td Jan 28, 2024
+              td Transfer from Savings
+              td.credit-amount +$500.00
+              td $9,499.74
   else
-    br
-    div
-      p If you're viewing this page then you have successfully configured and started this example server.
-      p This example shows you how to to add the #[a(href="https://developer.okta.com/authentication-guide/implementing-authentication/auth-code.html") Redirect Flow] to your Express application.
-      p When you click the login button, you will be redirected to the login page on your Okta org.
+    div.landing-page
+      div.hero-section
+        div.row
+          div.col-md-6
+            h1 Welcome to SecureBank
+            p.lead Your trusted partner for secure online banking. Access your accounts anytime, anywhere.
+            div.hero-features
+              div.feature-item
+                span.check-icon ✓
+                span 24/7 Account Access
+              div.feature-item
+                span.check-icon ✓
+                span Secure Transactions
+              div.feature-item
+                span.check-icon ✓
+                span Mobile Banking
+              div.feature-item
+                span.check-icon ✓
+                span Free Bill Pay
+            form(method="get", action="/login")
+              button.btn.btn-hero(type="submit") Sign In to Online Banking
+          div.col-md-6
+            div.hero-image
+              div.mock-card
+                p.card-label SecureBank
+                p.card-number •••• •••• •••• 4582
+                p.card-holder VALUED CUSTOMER
+
+      div.services-section
+        h2 Our Services
+        div.row
+          div.col-md-4
+            div.service-card
+              div.service-icon $
+              h3 Personal Banking
+              p Checking, savings, and money market accounts with competitive rates.
+          div.col-md-4
+            div.service-card
+              div.service-icon %
+              h3 Loans & Mortgages
+              p Competitive rates on home loans, auto loans, and personal lines of credit.
+          div.col-md-4
+            div.service-card
+              div.service-icon +
+              h3 Investment Services
+              p Grow your wealth with our investment and retirement planning services.
+
+      div.security-section
+        div.row
+          div.col-md-12.text-center
+            h2 Bank With Confidence
+            p Your security is our top priority. We use industry-leading encryption and multi-factor authentication to protect your accounts.
+            div.security-badges
+              span.badge-item 256-bit Encryption
+              span.badge-item FDIC Insured
+              span.badge-item 24/7 Fraud Monitoring

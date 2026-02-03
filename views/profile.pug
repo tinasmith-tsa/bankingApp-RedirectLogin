@@ -1,19 +1,60 @@
 extends layout
 
 block content
-  h2= "My Profile"
-  br
-  div
-    p Hello, #{user.displayName}. Below is the information that was read with your #[a(href="https://developer.okta.com/docs/api/resources/oidc.html#get-user-information", target="_blank") Access Token].
-  br
-  table.table.table-striped
-    thead 
-      tr 
-        th Claim 
-        th Value 
-    tbody 
-    for values, claims in user
-      tr 
-        td #{claims}
-        td #{values}
-    
+  h2.page-header My Accounts
+
+  div.row
+    div.col-md-8
+      div.account-detail-card
+        div.account-header
+          h3 Account Information
+          span.account-status Active
+
+        div.account-info-grid
+          div.info-item
+            label Account Holder
+            p #{user.displayName || 'Account Holder'}
+          div.info-item
+            label Email
+            p #{user.email || user.preferred_username || 'N/A'}
+          div.info-item
+            label Member Since
+            p January 2024
+          div.info-item
+            label Account Type
+            p Premium Checking
+
+        h4 Security Information
+        table.table.table-striped
+          thead
+            tr
+              th Property
+              th Value
+          tbody
+          for values, claims in user
+            tr
+              td #{claims}
+              td #{values}
+
+    div.col-md-4
+      div.sidebar-card
+        h4 Account Summary
+        div.summary-item
+          span Checking
+          span.amount $12,458.32
+        div.summary-item
+          span Savings
+          span.amount $45,230.00
+        div.summary-item
+          span Credit Card
+          span.amount.negative -$1,245.67
+        hr
+        div.summary-item.total
+          span Total Assets
+          span.amount $56,442.65
+
+      div.sidebar-card
+        h4 Quick Actions
+        a.btn.btn-bank.btn-block(href="#") Download Statement
+        a.btn.btn-bank.btn-block(href="#") Update Profile
+        a.btn.btn-bank.btn-block(href="#") Security Settings
