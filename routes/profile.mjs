@@ -4,6 +4,9 @@ import { getUserPreferences, createUserPreferences, updateUserPreferences } from
 
 const router = express.Router();
 
+// Re-authentication timeout (5 minutes)
+const REAUTH_TIMEOUT = 5 * 60 * 1000;
+
 /**
  * Middleware to ensure user is logged in
  */
@@ -12,6 +15,24 @@ function ensureLoggedIn(req, res, next) {
     return next();
   }
   res.redirect('/login');
+}
+
+/**
+ * Middleware to ensure user has recently re-authenticated
+ * Required for sensitive operations like profile editing
+ */
+function ensureRecentAuth(req, res, next) {
+  const recentlyAuthenticated = req.session.recentlyAuthenticated;
+  const now = Date.now();
+
+  if (recentlyAuthenticated && (now - recentlyAuthenticated) < REAUTH_TIMEOUT) {
+    // User has recently re-authenticated
+    return next();
+  }
+
+  // Require re-authentication
+  console.log('Re-authentication required for profile edit');
+  res.redirect('/reauth');
 }
 
 /**
@@ -60,9 +81,9 @@ router.get('/', ensureLoggedIn, async (req, res) => {
 });
 
 /**
- * GET /profile/edit - Display edit form
+ * GET /profile/edit - Display edit form (requires recent re-authentication)
  */
-router.get('/edit', ensureLoggedIn, async (req, res) => {
+router.get('/edit', ensureLoggedIn, ensureRecentAuth, async (req, res) => {
   try {
     const userId = req.user.id;
     const email = getUserEmail(req.user);
@@ -100,9 +121,9 @@ router.get('/edit', ensureLoggedIn, async (req, res) => {
 });
 
 /**
- * POST /profile/okta - Update Okta profile
+ * POST /profile/okta - Update Okta profile (requires recent re-authentication)
  */
-router.post('/okta', ensureLoggedIn, async (req, res) => {
+router.post('/okta', ensureLoggedIn, ensureRecentAuth, async (req, res) => {
   try {
     // Try multiple ways to get the Okta user ID
     const userId = req.user.id ||
@@ -151,9 +172,9 @@ router.post('/okta', ensureLoggedIn, async (req, res) => {
 });
 
 /**
- * POST /profile/preferences - Update local preferences
+ * POST /profile/preferences - Update local preferences (requires recent re-authentication)
  */
-router.post('/preferences', ensureLoggedIn, async (req, res) => {
+router.post('/preferences', ensureLoggedIn, ensureRecentAuth, async (req, res) => {
   try {
     const userId = req.user.id;
 

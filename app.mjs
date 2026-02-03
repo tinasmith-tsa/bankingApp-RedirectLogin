@@ -72,7 +72,7 @@ axios
       let { issuer, authorization_endpoint, token_endpoint, userinfo_endpoint, end_session_endpoint } = res.data;
       logout_url = end_session_endpoint;
 
-      // Set up passport
+      // Set up passport - standard login
       passport.use('oidc', new Strategy({
         issuer,
         authorizationURL: authorization_endpoint,
@@ -87,6 +87,23 @@ axios
           issuer, profile, context, idToken,
           accessToken, params
         }, null, 2)}\n*****`);
+        id_token = idToken;
+        return done(null, profile);
+      }));
+
+      // Set up passport - step-up re-authentication (forces login prompt)
+      passport.use('oidc-reauth', new Strategy({
+        issuer,
+        authorizationURL: authorization_endpoint,
+        tokenURL: token_endpoint,
+        userInfoURL: userinfo_endpoint,
+        clientID: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
+        callbackURL: `${APP_BASE_URL}/authorization-code/callback-reauth`,
+        scope: 'openid profile email',
+        prompt: 'login',  // Force re-authentication
+      }, (issuer, profile, context, idToken, accessToken, params, done) => {
+        console.log('Re-authentication successful for:', profile.displayName);
         id_token = idToken;
         return done(null, profile);
       }));
@@ -148,6 +165,20 @@ app.use('/authorization-code/callback',
       }
     }
     res.redirect('/profile');
+  }
+);
+
+// Step-up re-authentication for sensitive operations
+app.get('/reauth', ensureLoggedIn, passport.authenticate('oidc-reauth'));
+
+// Callback for re-authentication
+app.use('/authorization-code/callback-reauth',
+  passport.authenticate('oidc-reauth', { failureMessage: true, failWithError: true }),
+  (req, res) => {
+    // Mark session as recently re-authenticated
+    req.session.recentlyAuthenticated = Date.now();
+    console.log('User re-authenticated, redirecting to profile edit');
+    res.redirect('/profile/edit');
   }
 );
 
