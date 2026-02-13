@@ -63,7 +63,7 @@ With variables set, start your app:
 npm start
 ```
 
-Navigate to http://localhost:3000 in your browser.
+Navigate to http://localhost:3022 in your browser.
 
 If you see a home page that prompts you to login, then things are working!  Clicking the **Log in** button will redirect you to the Okta hosted sign-in page.
 

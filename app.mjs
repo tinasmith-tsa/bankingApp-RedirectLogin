@@ -18,10 +18,10 @@ import { universalLogoutRoute, universalLogoutAuth, initializeJwksClient } from 
 import dotenv from 'dotenv'
 
 dotenv.config({ path: '.okta.env' })
-const { ORG_URL, CLIENT_ID, CLIENT_SECRET, SESSION_SECRET, BASE_URL } = process.env;
+const { ORG_URL, CLIENT_ID, CLIENT_SECRET, SESSION_SECRET, BASE_URL, PORT } = process.env;
 
 // Base URL for callbacks (defaults to localhost for development)
-const APP_BASE_URL = BASE_URL || 'http://localhost:3000';
+const APP_BASE_URL = BASE_URL || `http://localhost:${PORT || 3000}`;
 
 // Universal Logout endpoint URL (used as JWT audience)
 const REVOCATION_ENDPOINT = `${APP_BASE_URL}/api/global-token-revocation`;
@@ -66,65 +66,63 @@ initializeJwksClient(ORG_URL);
 let logout_url, id_token;
 const _base = ORG_URL.slice(-1) == '/' ? ORG_URL.slice(0, -1) : ORG_URL;
 
-axios
-  .get(`${_base}/.well-known/openid-configuration`)
-  .then(res => {
-    if (res.status == 200) {
-      let { issuer, authorization_endpoint, token_endpoint, userinfo_endpoint, end_session_endpoint } = res.data;
-      logout_url = end_session_endpoint;
+try {
+  const res = await axios.get(`${_base}/.well-known/openid-configuration`);
+  if (res.status == 200) {
+    let { issuer, authorization_endpoint, token_endpoint, userinfo_endpoint, end_session_endpoint } = res.data;
+    logout_url = end_session_endpoint;
 
-      // Set up passport - standard login
-      passport.use('oidc', new Strategy({
-        issuer,
-        authorizationURL: authorization_endpoint,
-        tokenURL: token_endpoint,
-        userInfoURL: userinfo_endpoint,
-        clientID: CLIENT_ID,
-        clientSecret: CLIENT_SECRET,
-        callbackURL: `${APP_BASE_URL}/authorization-code/callback`,
-        scope: 'openid profile email',
-      }, (issuer, profile, context, idToken, accessToken, params, done) => {
-        console.log(`OIDC response: ${JSON.stringify({
-          issuer, profile, context, idToken,
-          accessToken, params
-        }, null, 2)}\n*****`);
-        id_token = idToken;
-        return done(null, profile);
-      }));
+    // Set up passport - standard login
+    passport.use('oidc', new Strategy({
+      issuer,
+      authorizationURL: authorization_endpoint,
+      tokenURL: token_endpoint,
+      userInfoURL: userinfo_endpoint,
+      clientID: CLIENT_ID,
+      clientSecret: CLIENT_SECRET,
+      callbackURL: `${APP_BASE_URL}/authorization-code/callback`,
+      scope: 'openid profile email',
+    }, (issuer, profile, context, idToken, accessToken, params, done) => {
+      console.log(`OIDC response: ${JSON.stringify({
+        issuer, profile, context, idToken,
+        accessToken, params
+      }, null, 2)}\n*****`);
+      id_token = idToken;
+      return done(null, profile);
+    }));
 
-      // Set up passport - step-up MFA authentication
-      // Uses acr_values to require multi-factor authentication
-      // See: https://developer.okta.com/docs/guides/step-up-authentication/main/
-      passport.use('oidc-mfa', new Strategy({
-        issuer,
-        authorizationURL: authorization_endpoint,
-        tokenURL: token_endpoint,
-        userInfoURL: userinfo_endpoint,
-        clientID: CLIENT_ID,
-        clientSecret: CLIENT_SECRET,
-        callbackURL: `${APP_BASE_URL}/authorization-code/callback-mfa`,
-        scope: 'openid profile email',
-        // Step-up authentication parameters
-        acrValues: 'urn:okta:loa:2fa:any',  // Require 2FA with any factor
-        maxAge: 0,  // Force fresh authentication
-      }, (issuer, profile, context, idToken, accessToken, params, done) => {
-        console.log('MFA step-up authentication successful for:', profile.displayName);
-        console.log('ACR claim:', context?.acr || 'not present');
-        console.log('AMR claim:', context?.amr || 'not present');
-        id_token = idToken;
-        // Store the authentication context for verification
-        profile.mfaVerified = true;
-        profile.authTime = context?.auth_time || Date.now();
-        return done(null, profile);
-      }));
-    }
-    else {
-      console.error(`Unable to reach the well-known endpoint. Are you sure that the ORG_URL you provided (${ORG_URL}) is correct?`);
-    }
-  })
-  .catch(error => {
-    console.error(error);
-  });
+    // Set up passport - step-up MFA authentication
+    // Uses acr_values to require multi-factor authentication
+    // See: https://developer.okta.com/docs/guides/step-up-authentication/main/
+    passport.use('oidc-mfa', new Strategy({
+      issuer,
+      authorizationURL: authorization_endpoint,
+      tokenURL: token_endpoint,
+      userInfoURL: userinfo_endpoint,
+      clientID: CLIENT_ID,
+      clientSecret: CLIENT_SECRET,
+      callbackURL: `${APP_BASE_URL}/authorization-code/callback-mfa`,
+      scope: 'openid profile email',
+      // Step-up authentication parameters
+      acrValues: 'urn:okta:loa:2fa:any',  // Require 2FA with any factor
+      maxAge: 0,  // Force fresh authentication
+    }, (issuer, profile, context, idToken, accessToken, params, done) => {
+      console.log('MFA step-up authentication successful for:', profile.displayName);
+      console.log('ACR claim:', context?.acr || 'not present');
+      console.log('AMR claim:', context?.amr || 'not present');
+      id_token = idToken;
+      // Store the authentication context for verification
+      profile.mfaVerified = true;
+      profile.authTime = context?.auth_time || Date.now();
+      return done(null, profile);
+    }));
+  }
+  else {
+    console.error(`Unable to reach the well-known endpoint. Are you sure that the ORG_URL you provided (${ORG_URL}) is correct?`);
+  }
+} catch (error) {
+  console.error(error);
+}
 
 passport.serializeUser((user, next) => {
   next(null, user);
